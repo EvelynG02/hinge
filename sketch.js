@@ -4,7 +4,6 @@ let maze = [
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,1], 
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 1,1, 1, 0, 0, 0, 0,0, 0, 0, 1, 1, 1,1, 0, 0, 0,0, 0, 0,0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0,0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0,0, 1],
   [1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0,0, 0, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0, 0, 0, 0, 1,0, 0, 0, 0, 0,0, 1, 0, 0, 0,0, 0,0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0, 0, 0, 0, 1,0, 0, 0, 0, 0,0, 1, 0, 0, 0,0, 0,0, 0, 1],
@@ -28,14 +27,21 @@ let maze = [
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0,0, 0, 0, 0, 1,0, 0, 0, 0, 0,0, 1, 0, 0, 0,0, 0,0, 0, 1],
   [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,1 ,0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0,0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0,0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   
 ];
 
 let icons = [];
 let player;
 let score = 0;
+document.getElementById('player-score').innerText = `Score: ${score}`;
+
+// Example: When a player scores
+function updateScore(points) {
+    score += points;
+    document.getElementById('player-score').innerText = `Score: ${score}`;
+}
+
 
 function preload() {
   // Load the SVG files for the icons
@@ -70,7 +76,7 @@ function generateIcons() {
   iconPositions = [];  // Clear previous icons
   for (let y = 0; y < maze.length; y++) {
     for (let x = 0; x < maze[y].length; x++) {
-      if (maze[y][x] === 0 && Math.random() < 0.5) {  // Place icon in 40% of empty spaces
+      if (maze[y][x] === 0 && Math.random() < 0.4) {  // Place icon in 40% of empty spaces
         let randomIcon = Math.floor(Math.random() * 31);
         let letter = String.fromCharCode(97 + randomIcon);
         iconPositions.push({x: x, y: y, icon: letter});
@@ -135,11 +141,13 @@ function checkCollision() {
     let icon = iconPositions[i];
     if (player.x === icon.x && player.y === icon.y) {
       iconPositions.splice(i, 1);  // Remove the icon
-      score += 10;  // Increase score
+      updateScore (10);  // Increase score
       break;
     }
   }
 }
+
+
 
 // Function to check if the player reached the end
 function checkWin() {
