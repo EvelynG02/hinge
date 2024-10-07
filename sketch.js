@@ -2,7 +2,7 @@ let canvas;
 let cellSize = 20;
 let mazeColor = 'blue';
 let score = 0;
-let timeLeft = 60;
+let timeLeft = 30;
 let player;
 let icons = {};
 let iconPositions = [];
