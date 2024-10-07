@@ -122,13 +122,41 @@ class Player {
 }
 
 function startTimer() {
-  // Timer function
-}
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').innerText = `Time: ${timeLeft}`; // Ensure 'timer' exists in HTML
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);}
 
 function checkCollision() {
-  // Check for player-icon collision
-}
+  for (let i = 0; i < iconPositions.length; i++) {
+    let icon = iconPositions[i];
+    if (player.x === icon.x && player.y === icon.y) {
+      iconPositions.splice(i, 1);  // Remove the icon
+      updateScore(10);  // Increase score
+      drawMaze(); // Re-draw the maze and icons after collision
+      drawIcons();
+      break;
+    }
+  }}
 
 function checkWin() {
   // Check if player reaches end of maze
 }
+function updateScore(points) {
+  score += points;
+  document.getElementById('player-score').innerText = `Score: ${score}`;
+}
+
+function gameLoop() {
+  drawMaze();
+  drawIcons();
+  player.move();
+  player.display();
+  checkCollision();
+  checkWin();
+}
+setInterval(gameLoop, 100); // Update the game every 100ms
