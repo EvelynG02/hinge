@@ -7,7 +7,6 @@ let score = 0;
 let timeLeft = 60; // 1 minute timer
 let gameWon = false;
 let timerInterval;
-let cellSize = 20;  // Size of each cell in the maze
 const mazeData = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,1], 
@@ -42,7 +41,6 @@ const mazeData = [
 
 let icons = [];
 let player;
-let score = 0;
 document.getElementById('player-score').innerText = `Score: ${score}`;
 
 // Example: When a player scores
@@ -96,8 +94,10 @@ function generateIcons() {
 
 // Draw the maze grid
 function drawMaze() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = mazeColor;
   ctx.lineWidth = 5;
+  
   for (let row = 0; row < mazeData.length; row++) {
     for (let col = 0; col < mazeData[row].length; col++) {
       if (mazeData[row][col] === 1) {
@@ -107,6 +107,7 @@ function drawMaze() {
   }
 }
 
+
   // Draw icons
   for (let i = 0; i < iconPositions.length; i++) {
     let icon = iconPositions[i];
@@ -114,7 +115,7 @@ function drawMaze() {
     let yPos = icon.y * cellSize;
     image(icons[icon.icon], xPos, yPos, cellSize, cellSize);
   }
-}
+
 
 class Player {
   constructor(x, y) {
