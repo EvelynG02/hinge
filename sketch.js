@@ -138,7 +138,6 @@ function checkCollision() {
       iconPositions.splice(i, 1);  // Remove the icon
       updateScore(10);  // Increase score
       drawMaze(); // Re-draw the maze and icons after collision
-      drawIcons();
       break;
     }
   }}
@@ -146,9 +145,19 @@ function checkCollision() {
 function checkWin() {
   // Check if player reaches end of maze
 }
+function endGame() {
+  if (score >= 1000) {
+    document.getElementById('winningScreen').style.display = 'block';
+    document.getElementById('finalScore').innerText = `Your Score: ${score}`;
+  }
+  clearInterval(timerInterval);
+}
 function updateScore(points) {
   score += points;
   document.getElementById('player-score').innerText = `Score: ${score}`;
+  if (score >= 150) {
+    endGame(); // Trigger game win when score reaches 150
+}
 }
 
 function gameLoop() {

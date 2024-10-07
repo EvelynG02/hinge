@@ -1,27 +1,21 @@
 /* Basic styling for the body */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 110vh;
     margin: 0;
   }
   
   /* Styling the container for the canvas */
-  .canvas-container {
-    text-align: center;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
+
   
   h1 {
-    margin-bottom: 20px;
+    margin-top: 10px;
     font-size: 24px;
-    color: #333;
+    color: #ffffff;
   }
   
   /* p5.js canvas styling */
