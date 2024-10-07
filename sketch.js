@@ -1,5 +1,14 @@
+
+const canvas = document.getElementById('mazeCanvas');
+const ctx = canvas.getContext('2d');
+const cellSize = 20; 
+const mazeColor = 'blue';
+let score = 0;
+let timeLeft = 60; // 1 minute timer
+let gameWon = false;
+let timerInterval;
 let cellSize = 20;  // Size of each cell in the maze
-let maze = [
+const mazeData = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,1], 
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 1,1, 1, 0, 0, 0, 0,0, 0, 0, 1, 1, 1,1, 0, 0, 0,0, 0, 0,0, 1],
@@ -87,20 +96,16 @@ function generateIcons() {
 
 // Draw the maze grid
 function drawMaze() {
-  for (let y = 0; y < maze.length; y++) {
-    for (let x = 0; x < maze[y].length; x++) {
-      let xPos = x * cellSize;
-      let yPos = y * cellSize;
-
-      if (maze[y][x] === 1) {
-        fill(0);  // Wall color
-        rect(xPos, yPos, cellSize, cellSize);
-      } else {
-        fill(255);  // Empty space
-        rect(xPos, yPos, cellSize, cellSize);
+  ctx.strokeStyle = mazeColor;
+  ctx.lineWidth = 5;
+  for (let row = 0; row < mazeData.length; row++) {
+    for (let col = 0; col < mazeData[row].length; col++) {
+      if (mazeData[row][col] === 1) {
+        ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
       }
     }
   }
+}
 
   // Draw icons
   for (let i = 0; i < iconPositions.length; i++) {
@@ -148,6 +153,31 @@ function checkCollision() {
 }
 
 
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').innerText = `Time: ${timeLeft}`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+function endGame() {
+  if (score >= 150) {
+    document.getElementById('winningScreen').style.display = 'block';
+    document.getElementById('finalScore').innerText = score;
+  }
+  clearInterval(timerInterval);
+}
+
+// Call necessary functions
+preloadIcons();
+drawMaze();
+generateIcons();
+drawIcons();
+startTimer(); // Start the countdown timer
 
 // Function to check if the player reached the end
 function checkWin() {

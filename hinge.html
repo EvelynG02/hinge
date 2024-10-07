@@ -8,14 +8,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <!-- Link to your external CSS -->
   <link rel="stylesheet" href="hinge.css">
+  <style>
+    body { display: flex; justify-content: center; align-items: center; flex-direction: column; background-color: black; color: white; font-family: Arial; }
+    canvas { border: 3px solid #000; background-color: black; }
+    #info { margin-bottom: 20px; text-align: center; }
+    #winningScreen { display: none; text-align: center; color: yellow; font-size: 2em; }
+  </style>
 </head>
 <body>
+  <div id="info">
+    <div id="instructions">
+      <h2>How to Play</h2>
+      <p>Use the arrow keys to move through the maze. Collect icons to score points.</p>
+      <p>You have 1 minute to score as many points as possible. Get 150 points to win!</p>
+    </div>
+    <div id="timer">Time: 60</div>
+    <div id="score">Score: 0</div>
+  </div>
+  
   <!-- Container for the p5.js canvas -->
   <div class="canvas-container">
     <h1>Hinge</h1>
     <div id="player-score">Score: 0</div>
     <div id="canvas-holder"></div>
     
+  </div>
+  <div id="winningScreen">
+    <h1>Congratulations! You Win!</h1>
+    <p>Your final score is: <span id="finalScore"></span></p>
   </div>
 
   <!-- Script for the p5.js sketch -->
