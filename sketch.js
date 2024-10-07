@@ -1,13 +1,12 @@
-
-const canvas = document.getElementById('mazeCanvas');
-const ctx = canvas.getContext('2d');
-const cellSize = 20; 
-const mazeColor = 'blue';
+let canvas;
+let cellSize = 20;
+let mazeColor = 'blue';
 let score = 0;
-let timeLeft = 60; // 1 minute timer
-let gameWon = false;
-let timerInterval;
-const mazeData = [
+let timeLeft = 60;
+let player;
+let icons = {};
+let iconPositions = [];
+const maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0,1], 
   [1, 0, 0, 0, 0, 0, 0, 0, 1, 1,1, 1, 0, 0, 0, 0,0, 0, 0, 1, 1, 1,1, 0, 0, 0,0, 0, 0,0, 1],
@@ -38,32 +37,20 @@ const mazeData = [
    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   
 ];
-
-let icons = [];
-let player;
-document.getElementById('player-score').innerText = `Score: ${score}`;
-
-// Example: When a player scores
-function updateScore(points) {
-    score += points;
-    document.getElementById('player-score').innerText = `Score: ${score}`;
-}
-
-
+let colors = ['#7D869C', '#9593D9', '#7D5C65', '#D4CBE5', '#BEA8AA', '#313628', '#E2E4F6'];
 function preload() {
-  // Load the SVG files for the icons
+  // Load icons (example)
   for (let i = 0; i < 31; i++) {
-    let letter = String.fromCharCode(97 + i);  // 'a' to 'z', 'za' to 'zf'
-    icons[letter] = loadImage(`imageshinge/Asset ${35 + i}finicon.svg`);
+    let letter = String.fromCharCode(97 + i);  // 'a' to 'z', etc.
+    icons[letter] = loadImage(`imageshinge/Asset ${35 + i}finicon.svg`);  // Correct path
   }
 }
 
 function setup() {
   createCanvas(maze[0].length * cellSize, maze.length * cellSize);
-  player = new Player(1, 1);  // Start at the top-left corner
-
+  player = new Player(1, 1);  // Starting position
   generateIcons();
-  noLoop();
+  startTimer();
 }
 
 function draw() {
@@ -71,13 +58,23 @@ function draw() {
   drawMaze();
   player.move();
   player.display();
-
+  drawIcons();
   checkCollision();
   checkWin();
 }
 
-// Generate icons randomly for the empty spaces
-let iconPositions = [];
+function drawMaze() {
+  stroke(mazeColor);
+  strokeWeight(5);
+  for (let row = 0; row < maze.length; row++) {
+    for (let col = 0; col < maze[row].length; col++) {
+      if (maze[row][col] === 1) {
+        fill(mazeColor);
+        rect(col * cellSize, row * cellSize, cellSize, cellSize);
+      }
+    }
+  }
+}
 
 function generateIcons() {
   iconPositions = [];  // Clear previous icons
@@ -92,29 +89,12 @@ function generateIcons() {
   }
 }
 
-// Draw the maze grid
-function drawMaze() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = mazeColor;
-  ctx.lineWidth = 5;
-  
-  for (let row = 0; row < mazeData.length; row++) {
-    for (let col = 0; col < mazeData[row].length; col++) {
-      if (mazeData[row][col] === 1) {
-        ctx.strokeRect(col * cellSize, row * cellSize, cellSize, cellSize);
-      }
-    }
-  }
-}
-
-
-  // Draw icons
+function drawIcons() {
   for (let i = 0; i < iconPositions.length; i++) {
     let icon = iconPositions[i];
-    let xPos = icon.x * cellSize;
-    let yPos = icon.y * cellSize;
-    image(icons[icon.icon], xPos, yPos, cellSize, cellSize);
+    image(icons[icon.icon], icon.x * cellSize, icon.y * cellSize, cellSize, cellSize);
   }
+}
 
 
 class Player {
@@ -136,60 +116,19 @@ class Player {
   }
 
   display() {
-    fill(255, 255, 0);  // Pac-Man color
+    fill(255, 255, 0);  // Player color
     ellipse(this.x * cellSize + cellSize / 2, this.y * cellSize + cellSize / 2, this.size * 0.8);
   }
 }
 
-// Function to check if player collides with an icon
-function checkCollision() {
-  for (let i = 0; i < iconPositions.length; i++) {
-    let icon = iconPositions[i];
-    if (player.x === icon.x && player.y === icon.y) {
-      iconPositions.splice(i, 1);  // Remove the icon
-      updateScore (10);  // Increase score
-      break;
-    }
-  }
-}
-
-
 function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer').innerText = `Time: ${timeLeft}`;
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      endGame();
-    }
-  }, 1000);
+  // Timer function
 }
 
-function endGame() {
-  if (score >= 150) {
-    document.getElementById('winningScreen').style.display = 'block';
-    document.getElementById('finalScore').innerText = score;
-  }
-  clearInterval(timerInterval);
+function checkCollision() {
+  // Check for player-icon collision
 }
 
-// Call necessary functions
-preloadIcons();
-drawMaze();
-generateIcons();
-drawIcons();
-startTimer(); // Start the countdown timer
-
-// Function to check if the player reached the end
 function checkWin() {
-  if (player.x === maze[0].length - 1 && player.y === maze.length - 1) {
-    // Reset player position and regenerate icons
-    player.x = 1;
-    player.y = 1;
-    generateIcons();  // Regenerate the icons
-  }
-}
-
-function keyPressed() {
-  loop();  // Allow movement when key is pressed
+  // Check if player reaches end of maze
 }
